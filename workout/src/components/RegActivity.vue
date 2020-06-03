@@ -1,6 +1,6 @@
 <template>
     <div id="reg-activity">
-        <h2>Registrera träningspass</h2>
+        <h2>{{regTitle}} träningspass</h2>
         <div id="reg-activity-text">
             <label for="activity">Vilken typ av träning har du genomfört?</label><br/>
             <input name="activity" type="text" v-model="activity">
@@ -26,18 +26,38 @@
             <label for="text">Beskriv känslan av träningspasset</label><br/>
             <textarea name="text" v-model="text" cols="30" rows="10"></textarea>
             <br/><br/>
-            <input type="button" value="Registrera aktivitet" @click="addActivity">
-            <p>{{ errorMsg }}</p>
+            <input type="button" value="Skicka" @click="addActivity">
+            <p id="errMsg">{{ errorMsg }}</p>
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { addPost } from '../api/api';
+import { addPost, updatePost } from '../api/api';
+
+//specificerar objektet som skickas in
+interface Activity {
+    _id: string;
+
+    activity: string;
+
+    date: string;
+
+    distance: number;
+
+    time: number;
+
+    text: string;
+
+    intensity: string;
+}
 
 @Component
 export default class RegActivity extends Vue {
+    //props
+    @Prop() private regTitle!: string;
+
     private activity: string = '';
 
     private date: string = '';
@@ -52,7 +72,10 @@ export default class RegActivity extends Vue {
 
     private errorMsg: string = '';
 
-    addActivity() {
+    @Prop() private updateActivity!: Activity | undefined;
+
+    //lägg till eller upppdatera aktivitet
+    async addActivity() {
         if (
             this.activity === ''
             || this.date === ''
@@ -61,8 +84,44 @@ export default class RegActivity extends Vue {
             || this.intensity === ''
         ) {
             this.errorMsg = 'Du har inte fyllt i formuläret korrekt';
+        } else if (this.updateActivity === undefined) {
+            await addPost(
+                this.activity,
+                this.date,
+                this.time,
+                this.text,
+                this.intensity,
+                this.distance
+            );
+            this.$router.push('/my-activities');
         } else {
-            addPost(this.activity, this.date, this.time, this.text, this.intensity, this.distance);
+            await updatePost(
+                this.updateActivity._id,
+                this.activity,
+                this.date,
+                this.time,
+                this.text,
+                this.intensity,
+                this.distance
+            );
+            this.$router.push('/my-activities');
+        }
+    }
+
+    mounted() {
+        //värdena från updateActivity som används i formuläret
+        if (this.updateActivity !== undefined) {
+            this.activity = this.updateActivity.activity;
+
+            this.date = this.updateActivity.date;
+
+            this.distance = this.updateActivity.distance;
+
+            this.time = this.updateActivity.time;
+
+            this.text = this.updateActivity.text;
+
+            this.intensity = this.updateActivity.intensity;
         }
     }
 }
@@ -109,12 +168,16 @@ export default class RegActivity extends Vue {
         font-weight: bold;
     }
 
-    input[type=submit]:hover {
+    input[type=button]:hover {
         background-color: white;
         color: orange;
         text-transform: uppercase;
         font-weight: bold;
         border: 2px solid orange;
+    }
+
+    #errMsg {
+        color: white;
     }
 
     @media only screen and (max-width: 800px) {

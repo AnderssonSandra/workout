@@ -1,7 +1,7 @@
 <template>
 <!--html, ev js-->
   <div id="app">
-    <Menu headerMsg="Header"/>
+    <Menu headerMsg="Workout"/>
     <router-view/>
     <Footer/>
     <!-- footer kommer vara här -->
@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import Menu from '@/components/Menu.vue';
 import Footer from '@/components/Footer.vue';
 
@@ -106,6 +106,7 @@ h3 {
 
 h1 {
   font-size: 3em;
+  padding: 1em;
 }
 
 h2 {
@@ -123,5 +124,15 @@ a {
   font-size: 1.2em;
   padding: 0 0 1em 0;
   line-height: 1.5em;
+}
+
+@media only screen and (max-width: 500px) {
+  h1 {
+    font-size: 1.6em;
+  }
+
+  h2 {
+    font-size: 1.2em;
+  }
 }
 </style>

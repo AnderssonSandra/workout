@@ -8,16 +8,39 @@
             <p><img class="arrowIcon" src="/arrow.png" alt="pil"> {{distance}} km</p>
         </div>
         <p class="text">{{text}}</p>
-        <button>Radera</button>
-        <button>Redigera</button>
+        <button class="btn" @click="deleteActivity">Radera</button>
+        <button class="btn"><router-link
+        :to="{name: 'EditActivity', params: { id: id } }">
+            Uppdatera inlägg</router-link></button>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { deletePost } from '../api/api';
+
+//specificerar objektet som skickas in
+interface AllActivities {
+    _id: string;
+
+    activity: string;
+
+    date: string;
+
+    distance: number;
+
+    time: number;
+
+    text: string;
+
+    intensity: string;
+}
 
 @Component
 export default class Activity extends Vue {
+    //props
+    @Prop() private id!: string;
+
     @Prop() private activity!: string;
 
     @Prop() private date!: string;
@@ -29,6 +52,16 @@ export default class Activity extends Vue {
     @Prop() private text!: string;
 
     @Prop() private intensity!: string;
+
+    @Prop() private allActivities!: AllActivities;
+
+    //radera i databas och skicka med id till föräldern
+    deleteActivity() {
+        deletePost(
+            this.id
+        );
+        this.$emit('onDelete', this.id);
+    }
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -94,6 +127,36 @@ export default class Activity extends Vue {
         color: orange;
     }
 
+    .btn {
+        width: 300px;
+        margin: 1em auto;
+        display: block;
+        padding: 0.7em;
+        background-color: orange;
+        color: white;
+        font-weight: bold;
+        font-size: 1em;
+    }
+
+    .btn a {
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 1em;
+    }
+
+    .btn:hover {
+        background-color: white;
+        color: orange;
+        text-transform: uppercase;
+        border: 2px solid orange;
+    }
+
+    .btn a:hover {
+        color: orange;
+        text-transform: uppercase;
+    }
+
     @media only screen and (max-width: 800px) {
         .activity {
         width: 80%;
@@ -111,6 +174,10 @@ export default class Activity extends Vue {
 
         .activityParent p {
             text-align: left;
+        }
+
+        .btn {
+            width: 90%;
         }
     }
 

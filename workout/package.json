@@ -57,7 +57,9 @@
       "comma-dangle": 0,
       "arrow-body-style": 0,
       "@typescript-eslint/no-inferrable-types":0,
-      "quote-props": 0
+      "quote-props": 0,
+      "spaced-comment": 0,
+      "no-underscore-dangle": 0
     }
   },
   "browserslist": [

@@ -1,15 +1,17 @@
 <template>
   <div class="addActivity">
-    <RegActivity/>
+    <RegActivity
+    regTitle="Lägg till"
+    />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
+// importerar
 import RegActivity from '@/components/RegActivity.vue';
 
 export default {
-    name: 'Home',
+    name: 'AddActivity',
     components: {
         RegActivity
     },

@@ -21,6 +21,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Menu extends Vue {
+    //Meny
     private isOpen = false;
 
     private toggleMenu() {
@@ -40,9 +41,9 @@ export default class Menu extends Vue {
             menuTitle: 'Mina aktiviter',
             menuUrl: '/my-activities'
         }
-
     ]
 
+    //props
     @Prop() private headerMsg!: string;
 }
 </script>
@@ -56,10 +57,16 @@ header {
     background-size: cover;
 }
 
+header h1 {
+    color: white;
+    padding: 600px 10px 0 0;
+    text-align: right;
+}
+
 #menu-container {
     display: inline-block;
     cursor: pointer;
-    position: absolute;
+    position: fixed;
     top: 2em;
     right: 2em;
     z-index: 10;
@@ -107,6 +114,10 @@ header {
 @media only screen and (max-width: 500px) {
     header {
         height: 400px;
+    }
+
+    header h1 {
+        padding: 350px 10px 0 0;
     }
 
     #main-menu {
